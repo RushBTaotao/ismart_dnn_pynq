@@ -9,22 +9,22 @@
 #include "net_hls.h"
 
 
-FIX_32_12 compute_engine_16(FIX_WT w0,  FIX_FM b0,
-					  FIX_WT w1,  FIX_FM b1,
-					  FIX_WT w2,  FIX_FM b2,
-					  FIX_WT w3,  FIX_FM b3,
-					  FIX_WT w4,  FIX_FM b4,
-					  FIX_WT w5,  FIX_FM b5,
-					  FIX_WT w6,  FIX_FM b6,
-					  FIX_WT w7,  FIX_FM b7,
-					  FIX_WT w8,  FIX_FM b8,
-					  FIX_WT w9,  FIX_FM b9,
-					  FIX_WT w10, FIX_FM b10,
-					  FIX_WT w11, FIX_FM b11,
-					  FIX_WT w12, FIX_FM b12,
-					  FIX_WT w13, FIX_FM b13,
-					  FIX_WT w14, FIX_FM b14,
-					  FIX_WT w15, FIX_FM b15)
+FIX_32_12 compute_engine_16(FIX_WT_8_1 w0,  FIX_FM_16_6 b0,
+					  FIX_WT_8_1 w1,  FIX_FM_16_6 b1,
+					  FIX_WT_8_1 w2,  FIX_FM_16_6 b2,
+					  FIX_WT_8_1 w3,  FIX_FM_16_6 b3,
+					  FIX_WT_8_1 w4,  FIX_FM_16_6 b4,
+					  FIX_WT_8_1 w5,  FIX_FM_16_6 b5,
+					  FIX_WT_8_1 w6,  FIX_FM_16_6 b6,
+					  FIX_WT_8_1 w7,  FIX_FM_16_6 b7,
+					  FIX_WT_8_1 w8,  FIX_FM_16_6 b8,
+					  FIX_WT_8_1 w9,  FIX_FM_16_6 b9,
+					  FIX_WT_8_1 w10, FIX_FM_16_6 b10,
+					  FIX_WT_8_1 w11, FIX_FM_16_6 b11,
+					  FIX_WT_8_1 w12, FIX_FM_16_6 b12,
+					  FIX_WT_8_1 w13, FIX_FM_16_6 b13,
+					  FIX_WT_8_1 w14, FIX_FM_16_6 b14,
+					  FIX_WT_8_1 w15, FIX_FM_16_6 b15)
 {
 	FIX_32_12 mul0, mul1, mul2,  mul3,  mul4,  mul5,  mul6,  mul7;
 	FIX_32_12 mul8, mul9, mul10, mul11, mul12, mul13, mul14, mul15;
@@ -48,7 +48,7 @@ FIX_32_12 compute_engine_16(FIX_WT w0,  FIX_FM b0,
 	mul14 = w14 * b14;
 	mul15 = w15 * b15;
 
-
+  // add tree style ;
 	add0 = mul0  + mul1;
 	add1 = mul2  + mul3;
 	add2 = mul4  + mul5;
@@ -74,14 +74,14 @@ FIX_32_12 compute_engine_16(FIX_WT w0,  FIX_FM b0,
 
 
 
-FIX_FM compute_engine_8(FIX_WT w0,  FIX_FM b0,
-					  FIX_WT w1,  FIX_FM b1,
-					  FIX_WT w2,  FIX_FM b2,
-					  FIX_WT w3,  FIX_FM b3,
-					  FIX_WT w4,  FIX_FM b4,
-					  FIX_WT w5,  FIX_FM b5,
-					  FIX_WT w6,  FIX_FM b6,
-					  FIX_WT w7,  FIX_FM b7)
+FIX_FM_16_6 compute_engine_8(FIX_WT_8_1 w0,  FIX_FM_16_6 b0,
+					  FIX_WT_8_1 w1,  FIX_FM_16_6 b1,
+					  FIX_WT_8_1 w2,  FIX_FM_16_6 b2,
+					  FIX_WT_8_1 w3,  FIX_FM_16_6 b3,
+					  FIX_WT_8_1 w4,  FIX_FM_16_6 b4,
+					  FIX_WT_8_1 w5,  FIX_FM_16_6 b5,
+					  FIX_WT_8_1 w6,  FIX_FM_16_6 b6,
+					  FIX_WT_8_1 w7,  FIX_FM_16_6 b7)
 {
 	FIX_32_16 mul0, mul1, mul2,  mul3,  mul4,  mul5,  mul6,  mul7;
 	FIX_32_16 add0, add1, add2, add3,  add4,  add5,  add6;
@@ -105,16 +105,16 @@ FIX_FM compute_engine_8(FIX_WT w0,  FIX_FM b0,
 
 	add6 = add4 + add5;
 
-	return (FIX_FM)add6;
+	return (FIX_FM_16_6)add6;
 
 }
 
 
-void CONV_1x1(FIX_FM bottom[16][22][42],
-			  FIX_FM top[16][22][42],
-			  FIX_WT weights[16][16])
+void CONV_1x1(FIX_FM_16_6 bottom[16][22][42],
+			  FIX_FM_16_6 top[16][22][42],  // always buf
+			  FIX_WT_8_1 weights[16][16])
 {
-FIX_WT weight_buf[16][16];
+FIX_WT_8_1 weight_buf[16][16];
 FIX_32_12 tmp[16];
 
 #pragma HLS ARRAY_PARTITION variable=bottom cyclic dim=1 factor=16
@@ -122,7 +122,7 @@ FIX_32_12 tmp[16];
 #pragma HLS ARRAY_PARTITION variable=weight_buf dim=1 factor=16
 #pragma HLS ARRAY_PARTITION variable=weight_buf dim=2 factor=16
 #pragma HLS ARRAY_PARTITION variable=tmp complete
-
+// implement 8 hardward core
 #pragma HLS ALLOCATION instances=compute_engine_16 limit=8 function
 
 	for(int i = 0; i < 16; i++)
@@ -135,12 +135,13 @@ FIX_32_12 tmp[16];
 
 //			for(int co = 0; co < 16; co+=8) {
 #pragma HLS pipeline
-			for(int co = 0; co < 16; co+=16) {
+			for(int co = 0; co < 16; co+=16) { //not used
 				for(int coo = 0; coo < 16; coo++) {
 #pragma HLS unroll
-
+                                             //weight_buf: [out channel][in channel]
+											 //bottom :[in channel][h][w]
 					tmp[coo] = compute_engine_16(
-												 weight_buf[co+coo][0],  bottom[0][h][w],
+												 weight_buf[co+coo][0],  bottom[0][h][w], 
 												 weight_buf[co+coo][1],  bottom[1][h][w],
 												 weight_buf[co+coo][2],  bottom[2][h][w],
 												 weight_buf[co+coo][3],  bottom[3][h][w],

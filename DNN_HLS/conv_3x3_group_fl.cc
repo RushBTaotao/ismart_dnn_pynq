@@ -9,8 +9,8 @@
 #include "net_hls.h"
 
 
-void load_weights(FIX_WT weight_buf[16],
-				  FIX_WT weights[16][3][3],
+void load_weights(FIX_WT_8_1 weight_buf[16],
+				  FIX_WT_8_1 weights[16][3][3],
 				  int i, int j)
 {
 #pragma HLS ARRAY_PARTITION variable=weights dim=1 factor=16
@@ -23,18 +23,18 @@ void load_weights(FIX_WT weight_buf[16],
 }
 
 
-void CONV_3x3_group(FIX_FM bottom[16][22][42],
-					FIX_FM top[16][22][42],
-					FIX_WT weights[16][3][3])
+void CONV_3x3_group(FIX_FM_16_6 bottom[16][22][42],
+					FIX_FM_16_6 top[16][22][42],
+					FIX_WT_8_1 weights[16][3][3])
 {
 
-	FIX_WT weight_buf[16];
+	FIX_WT_8_1 weight_buf[16];
 
 #pragma HLS ARRAY_PARTITION variable=bottom cyclic dim=1 factor=16
 #pragma HLS ARRAY_PARTITION variable=top cyclic dim=1 factor=16
 #pragma HLS ARRAY_PARTITION variable=weight_buf complete
 
-
+// 为什么运算顺序反了过来
 	for(int i = 0; i < 3; i++){
 		for(int j = 0; j < 3; j++){
 
